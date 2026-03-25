@@ -67,3 +67,15 @@ void esp_flash_config(void)
 
 	esp_mmu_map_init();
 }
+
+void esp_flash_config_post_psram(void)
+{
+#if CONFIG_SOC_SERIES_ESP32S3
+	esp_err_t ret = esp_flash_init_default_chip();
+
+	if (ret != ESP_OK) {
+		ESP_EARLY_LOGE(TAG, "Failed to init flash chip: %d", ret);
+		abort();
+	}
+#endif
+}

@@ -16,3 +16,8 @@ bool flash_is_octal_mode_enabled(void);
  * @brief Common flash initialization code
  */
 void esp_flash_config(void);
+
+/**
+ * @brief Reinitialize the default flash chip after PSRAM timing settles
+ */
+void esp_flash_config_post_psram(void);
