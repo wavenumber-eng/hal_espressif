@@ -48,8 +48,6 @@ __attribute__((weak)) int spi_flash_init_chip_state(void)
 
 void esp_flash_config(void)
 {
-	esp_err_t ret;
-
 	spi_flash_init_chip_state();
 
 	esp_mspi_pin_init();
@@ -66,11 +64,32 @@ void esp_flash_config(void)
 	/* Switch to OS-aware functions for runtime flash operations */
 	esp_flash_app_init();
 
+#if CONFIG_SOC_SERIES_ESP32S3
+	/*
+	 * ESP32-S3 with octal PSRAM can retune MSPI after esp_init_psram().
+	 * Defer the default flash chip probe until the final timing is known.
+	 */
+#else
+	esp_err_t ret;
+
 	ret = esp_flash_init_default_chip();
 	if (ret != ESP_OK) {
 		ESP_EARLY_LOGE(TAG, "Failed to init flash chip: %d", ret);
 		abort();
 	}
+#endif
 
 	esp_mmu_map_init();
+}
+
+void esp_flash_config_post_psram(void)
+{
+#if CONFIG_SOC_SERIES_ESP32S3
+	esp_err_t ret = esp_flash_init_default_chip();
+
+	if (ret != ESP_OK) {
+		ESP_EARLY_LOGE(TAG, "Failed to init flash chip: %d", ret);
+		abort();
+	}
+#endif
 }
