@@ -113,8 +113,14 @@
 #define MCUBOOT_USE_FLASH_AREA_GET_SECTORS
 
 /* Default maximum number of flash sectors per image slot; change
- * as desirable. */
+ * as desirable. Honor Zephyr's MCUboot Kconfig setting when this header
+ * is used ahead of MCUboot's Zephyr config header in the include path.
+ */
+#if defined(CONFIG_BOOT_MAX_IMG_SECTORS)
+#define MCUBOOT_MAX_IMG_SECTORS CONFIG_BOOT_MAX_IMG_SECTORS
+#else
 #define MCUBOOT_MAX_IMG_SECTORS 512
+#endif
 
 /* Default number of separately updateable images; change in case of
  * multiple images. */
