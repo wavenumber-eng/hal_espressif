@@ -18,3 +18,8 @@
             abort();                                                \
         }                                                           \
     } while(0)
+
+#ifdef ASSERT
+#undef ASSERT
+#endif
+#define ASSERT(arg) assert(arg)

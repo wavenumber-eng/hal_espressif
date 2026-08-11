@@ -85,12 +85,11 @@
 #define MCUBOOT_USE_TINYCRYPT
 #endif
 
-/*
- * Always check the signature of the image in the primary slot before booting,
- * even if no upgrade was performed. This is recommended if the boot
- * time penalty is acceptable.
- */
+/* Check the primary slot on every boot only when requested by Zephyr's
+ * MCUboot configuration. Image validation still runs during an upgrade. */
+#if defined(CONFIG_BOOT_VALIDATE_SLOT0)
 #define MCUBOOT_VALIDATE_PRIMARY_SLOT
+#endif
 
 #ifdef CONFIG_ESP_DOWNGRADE_PREVENTION
 #define MCUBOOT_DOWNGRADE_PREVENTION 1
